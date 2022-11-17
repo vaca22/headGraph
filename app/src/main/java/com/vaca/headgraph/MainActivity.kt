@@ -38,31 +38,32 @@ class MainActivity : AppCompatActivity() {
         PictureSelector.create(this)
             .openGallery(SelectMimeType.ofImage())
             .setImageEngine(GlideEngine.createGlideEngine())
-            .setCompressEngine(object:CompressFileEngine{
+            .setCompressEngine(object : CompressFileEngine {
                 override fun onStartCompress(
                     context: Context?,
                     source: java.util.ArrayList<Uri>?,
                     call: OnKeyValueResultCallbackListener?
                 ) {
-                    Luban.with(this@MainActivity).load(source).ignoreBy(100).setCompressListener(object:OnNewCompressListener{
-                        override fun onStart() {
+                    Luban.with(this@MainActivity).load(source).ignoreBy(100)
+                        .setCompressListener(object : OnNewCompressListener {
+                            override fun onStart() {
 
-                        }
+                            }
 
-                        override fun onSuccess(source: String?, compressFile: File?) {
-                            call?.onCallback(source,compressFile?.absolutePath)
-                        }
+                            override fun onSuccess(source: String?, compressFile: File?) {
+                                call?.onCallback(source, compressFile?.absolutePath)
+                            }
 
-                        override fun onError(source: String?, e: Throwable?) {
-                            call?.onCallback(source,null)
-                        }
+                            override fun onError(source: String?, e: Throwable?) {
+                                call?.onCallback(source, null)
+                            }
 
-                    }).launch()
+                        }).launch()
 
                 }
 
             })
-            .setCropEngine(object :CropFileEngine{
+            .setCropEngine(object : CropFileEngine {
                 override fun onStartCrop(
                     fragment: Fragment?,
                     srcUri: Uri?,
@@ -70,14 +71,14 @@ class MainActivity : AppCompatActivity() {
                     dataSource: java.util.ArrayList<String>?,
                     requestCode: Int
                 ) {
-                   val  uCrop = UCrop.of(srcUri!!, destinationUri!!, dataSource);
-                    uCrop.setImageEngine(object:UCropImageEngine{
+                    val uCrop = UCrop.of(srcUri!!, destinationUri!!, dataSource);
+                    uCrop.setImageEngine(object : UCropImageEngine {
                         override fun loadImage(
                             context: Context?,
                             url: String?,
                             imageView: ImageView?
                         ) {
-                          Glide.with(this@MainActivity).load(url).into(imageView!!)
+                            Glide.with(this@MainActivity).load(url).into(imageView!!)
                         }
 
                         override fun loadImage(
@@ -91,23 +92,24 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     })
-                    uCrop.start(fragment!!.requireActivity(),fragment,requestCode)
+                    uCrop.start(fragment!!.requireActivity(), fragment, requestCode)
                 }
 
             })
 
             .forResult(object : OnResultCallbackListener<LocalMedia?> {
                 override fun onResult(result: ArrayList<LocalMedia?>?) {
-                    Log.e("fuck",result?.size.toString())
+                    Log.e("fuck", result?.size.toString())
                     result?.let {
-                        for(i in it){
-                            val path=i!!.compressPath
-                            Log.e("fuckyout",path)
+                        for (i in it) {
+                            val path = i!!.compressPath
+                            Log.e("fuckyout", path)
                         }
                     }
 
 
                 }
+
                 override fun onCancel() {}
             })
 
