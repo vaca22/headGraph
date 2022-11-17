@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity() {
 
         PictureSelector.create(this)
             .openGallery(SelectMimeType.ofImage())
+            .setMinSelectNum(1)
+            .setMaxSelectNum(1)
             .setImageEngine(GlideEngine.createGlideEngine())
             .setCompressEngine(object : CompressFileEngine {
                 override fun onStartCompress(
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     dataSource: java.util.ArrayList<String>?,
                     requestCode: Int
                 ) {
-                    val uCrop = UCrop.of(srcUri!!, destinationUri!!, dataSource);
+                    val uCrop = UCrop.of(srcUri!!, destinationUri!!, dataSource).withAspectRatio(1f,1f);
                     uCrop.setImageEngine(object : UCropImageEngine {
                         override fun loadImage(
                             context: Context?,
